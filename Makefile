@@ -1,4 +1,4 @@
-.PHONY: all localizable-strings
+.PHONY: all localizable-strings release build test travis
 
 BUILDDIR := $(shell mktemp -d "$(TMPDIR)/Sparkle.XXXXXX")
 
@@ -9,8 +9,13 @@ localizable-strings:
 	rm Sparkle/en.lproj/Localizable.strings
 
 release:
-	xcodebuild -scheme Distribution -configuration Release -derivedDataPath "$(BUILDDIR)"
+	xcodebuild -scheme Distribution -configuration Release -derivedDataPath "$(BUILDDIR)" build
 	open -R "$(BUILDDIR)/Build/Products/Release/Sparkle-"*.tar.bz2
 
-travis:
+build:
 	xcodebuild clean build
+
+test:
+	xcodebuild -scheme Distribution -configuration Debug test
+
+travis: test
